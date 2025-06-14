@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState } from "react";
 import "./App.css";
-import { Button } from "@/components/ui/button";
 import { Route, Routes } from "react-router-dom";
 import AuthLayout from "./components/Auth/Layout";
 import ErrorPage from "./ErrorPage";
@@ -11,6 +10,10 @@ import AdminFeatures from "./pages/admin-view/features.jsx";
 import PageNotFound from "./not_found/index.jsx";
 import CheckAuth from "./components/common/check-auth.jsx";
 import UnAuth from "./pages/unauth-page/unauth.jsx";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice/index.js";
 const AdminOrder = lazy(() => import("./pages/admin-view/orders.jsx"));
 const AdminProducts = lazy(() => import("./pages/admin-view/products.jsx"));
 const ShopLayout = lazy(() => import("./components/shopping-view/Layout.jsx"));
@@ -24,11 +27,25 @@ const Login = lazy(() => import("./pages/auth/Login.jsx"));
 const Register = lazy(() => import("./pages/auth/Register.jsx"));
 
 function App() {
-  const isAuthenticated = false;
-  const user = {
-    name: "subham",
-    role: "user",
-  };
+  // console.log("isA!!pp.jsauthenticates", isAuthenticated);
+  // console.log("UserApp.js", user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+  const { isAuthenticated, user, isLoading } = useSelector(
+    (state) => state.auth
+  );
+  if (isLoading)
+    return (
+      <div className="flex flex-col space-y-3">
+        <Skeleton className="h-[600px] w-[600px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[400px]" />
+          <Skeleton className="h-4 w-[380px]" />
+        </div>
+      </div>
+    );
   return (
     <div className="flex flex-col overflow-hidden bg-black text-white">
       <Routes>

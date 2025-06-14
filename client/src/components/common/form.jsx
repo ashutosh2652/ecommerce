@@ -70,7 +70,7 @@ function CommonForm({
             }}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={getcontrolItem.placeholder} />
+              <SelectValue placeholder={getcontrolItem.label} />
             </SelectTrigger>
             <SelectContent>
               {getcontrolItem.options && getcontrolItem.options.length > 0

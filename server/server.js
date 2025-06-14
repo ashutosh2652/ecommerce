@@ -13,7 +13,7 @@ mongoose
     console.log(err);
   });
 const app = express();
-const whitelist = ["http://localhost:5173/"];
+const whitelist = ["http://localhost:5173"];
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -39,5 +39,8 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
+import AuthRouter from "./routes/auth/auth-routes.js";
+app.use("/api/auth", AuthRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is listening to port:${PORT}`));

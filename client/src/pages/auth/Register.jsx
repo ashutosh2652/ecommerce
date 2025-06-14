@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import CommonForm from "../../components/common/form";
 import { registerFormControl } from "../../config";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../store/auth-slice";
+import { toast, Toaster } from "sonner";
 const initialState = {
   userName: "",
   email: "",
@@ -10,7 +13,21 @@ const initialState = {
 };
 const Register = () => {
   const [formData, setFormData] = useState(initialState);
-  function onSubmit() {}
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  function onSubmit(event) {
+    event.preventDefault();
+    console.log(formData);
+
+    dispatch(registerUser(formData)).then((data) => {
+      if (data?.payload?.sucess) {
+        // toast.success("Account created successfully");
+        navigate("/auth/login");
+      } else {
+        toast.error(data.payload.message);
+      }
+    });
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4 text-white font-sans">
       <motion.div

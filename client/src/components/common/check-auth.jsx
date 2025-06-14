@@ -5,8 +5,11 @@ function CheckAuth({ isAuthenticated, children, user }) {
   const location = useLocation();
   //loading states
   if (isAuthenticated === undefined || user === undefined) {
-    return <Loading />;
+    <Loading />;
   }
+  // console.log("Isauthenticated!", isAuthenticated);
+  // console.log("User", user);
+
   if (
     !isAuthenticated &&
     !(
@@ -33,7 +36,7 @@ function CheckAuth({ isAuthenticated, children, user }) {
     (location?.pathname?.includes("/login") ||
       location?.pathname?.includes("/register"))
   ) {
-    if (user.role === "admin") {
+    if (user?.role === "admin") {
       return <Navigate to="/admin/dashboard" replace />; //replace->it replace the current state of login to new state dashboard
     } else {
       return <Navigate to="/shop/home" replace />;
@@ -48,7 +51,7 @@ function CheckAuth({ isAuthenticated, children, user }) {
   }
   if (
     isAuthenticated &&
-    user.role !== "admin" &&
+    user?.role !== "admin" &&
     location.pathname.includes("admin")
   ) {
     return <Navigate to="/unauth-page" replace />;

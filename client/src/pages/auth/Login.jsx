@@ -3,13 +3,27 @@ import { motion } from "framer-motion";
 import CommonForm from "../../components/common/form";
 import { loginFormControl } from "../../config";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../store/auth-slice";
+import { toast } from "sonner";
 const initialState = {
   email: "",
   password: "",
 };
 const Register = () => {
   const [formData, setFormData] = useState(initialState);
-  function onSubmit() {}
+  const dispatch = useDispatch();
+  function onSubmit(event) {
+    event.preventDefault();
+    dispatch(loginUser(formData)).then((data) => {
+      if (data?.payload?.success) {
+        toast.success("LoggedIn Successfully!");
+      } else {
+        toast.error(data.payload.message);
+      }
+      console.log("Data", data);
+    });
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4 text-white font-sans">
       <motion.div
