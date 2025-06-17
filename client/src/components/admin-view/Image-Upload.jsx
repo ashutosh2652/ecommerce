@@ -1,14 +1,16 @@
 import { useRef } from "react";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 import { CloudUpload, FileIcon, XIcon } from "lucide-react";
-import { Button } from "../../components/ui/button";
-
+import { Button } from "../ui/button";
+import { useEffect } from "react";
+import axios from "axios";
 function ProductImageUpload({
   imageFile,
   setImageFile,
   uploadImageUrl,
   setuploadImageUrl,
+  setImageLoading,
 }) {
   const InputRef = useRef(null);
   function handleImageFileChange(event) {
@@ -31,6 +33,26 @@ function ProductImageUpload({
       InputRef.current.value = "";
     }
   }
+  async function uploadImageToCloudinary() {
+    try {
+      setImageLoading(true);
+      const data = new FormData();
+      data.append("my-file", imageFile);
+      const response = await axios.post(
+        "http://localhost:5000/api/admin/products/image-upload",
+        data
+      );
+      setImageLoading(false);
+      console.log(response);
+      if (response.data?.success) setuploadImageUrl(response.data?.result?.url);
+    } catch (error) {
+      setImageLoading(false);
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    if (imageFile !== null) uploadImageToCloudinary();
+  }, [imageFile]);
   return (
     <div className="w-full max-w-md mx-auto">
       <Label className="text-lg font-semibold ml-5 block cursor-pointer mb-5">

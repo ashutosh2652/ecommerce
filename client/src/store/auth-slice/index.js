@@ -18,13 +18,15 @@ export const registerUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log("E!!or", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || { message: "Unknown error!" }
+      );
     }
   }
 );
 export const loginUser = createAsyncThunk(
   "/auth/login",
-  async (FormData, rejectWithValue) => {
+  async (FormData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
@@ -34,28 +36,35 @@ export const loginUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log(error);
-      return error.response.data;
+      return rejectWithValue(
+        error.response?.data || { message: "Unknown error!" }
+      );
     }
   }
 );
-export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate,",
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    return error.response.data;
+export const checkAuth = createAsyncThunk(
+  "/auth/checkauth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/check-auth",
+        {
+          withCredentials: true,
+          headers: {
+            "Cache-Control":
+              "no-store, no-cache, must-revalidate, proxy-revalidate,",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response?.data || { message: "Unknown error" }
+      );
+    }
   }
-});
+);
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -81,6 +90,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+        console.log(action.payload);
         toast.dismiss("register-loading");
       })
       .addCase(loginUser.pending, (state) => {

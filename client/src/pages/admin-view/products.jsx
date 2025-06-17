@@ -8,7 +8,7 @@ import {
 } from "../../components/ui/sheet";
 import CommonForm from "../../components/common/form";
 import { addProductFormElements } from "../../config";
-import ProductImageUpload from "./Image-Upload";
+import ProductImageUpload from "../../components/admin-view/Image-Upload";
 
 const initialFormData = {
   image: null,
@@ -25,6 +25,7 @@ function AdminProducts() {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uploadImageUrl, setuploadImageUrl] = useState("");
+  const [ImageLoading, setImageLoading] = useState(false);
   function onSubmit() {}
   return (
     <>
@@ -52,6 +53,7 @@ function AdminProducts() {
             setImageFile={setImageFile}
             uploadImageUrl={uploadImageUrl}
             setuploadImageUrl={setuploadImageUrl}
+            setImageLoading={setImageLoading}
           />
           <div className="py-6 px-6">
             <CommonForm
