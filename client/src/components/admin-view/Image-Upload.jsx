@@ -5,12 +5,14 @@ import { CloudUpload, FileIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
 import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
 function ProductImageUpload({
   imageFile,
   setImageFile,
   uploadImageUrl,
   setuploadImageUrl,
   setImageLoading,
+  ImageLoading,
 }) {
   const InputRef = useRef(null);
   function handleImageFileChange(event) {
@@ -29,6 +31,7 @@ function ProductImageUpload({
   }
   function handleremoveFile() {
     setImageFile(null);
+    setuploadImageUrl("");
     if (InputRef.current) {
       InputRef.current.value = "";
     }
@@ -47,11 +50,17 @@ function ProductImageUpload({
       if (response.data?.success) setuploadImageUrl(response.data?.result?.url);
     } catch (error) {
       setImageLoading(false);
+      setuploadImageUrl("");
+      InputRef.current.value = "";
       console.log(error);
     }
   }
   useEffect(() => {
-    if (imageFile !== null) uploadImageToCloudinary();
+    const controller = new AbortController();
+    if (imageFile !== null && uploadImageUrl === "") uploadImageToCloudinary();
+    return () => {
+      controller.abort();
+    };
   }, [imageFile]);
   return (
     <div className="w-full max-w-md mx-auto">
@@ -61,7 +70,9 @@ function ProductImageUpload({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className="border-2 p-4 border-dashed bg-muted-foreground mt-5"
+        className={` bg-muted-foreground mt-5 ${
+          !ImageLoading ? "border-2 p-4 border-dashed" : ""
+        }`}
       >
         <Input
           type="file"
@@ -78,6 +89,8 @@ function ProductImageUpload({
             <CloudUpload />
             <span>Drag & Drop or Click to Upload Images</span>
           </Label>
+        ) : ImageLoading ? (
+          <Skeleton className="h-20 w-full bg-muted" />
         ) : (
           <div className="flex items-center justify-between">
             <FileIcon size={28} />
