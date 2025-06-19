@@ -6,13 +6,15 @@ import { useState } from "react";
 function AdminLayout() {
   const [openSideBar, setOpenSideBar] = useState(false);
   return (
-    <div className="min-h-screen w-full flex flex-1 ">
+    <div className="h-screen w-full flex  ">
       {/* Admin Sidebar */}
-      <AdminSidebar open={openSideBar} setOpen={setOpenSideBar} />
-      <div className="flex flex-col flex-1">
+      <div className="h-full ">
+        <AdminSidebar open={openSideBar} setOpen={setOpenSideBar} />
+      </div>
+      <div className="flex flex-col flex-1 h-full">
         {/* Admin Header */}
         <AdminHeader setOpen={setOpenSideBar} />
-        <main className="flex flex-1 flex-col bg-muted/40 p-4 md:p-6">
+        <main className="flex flex-1 flex-col bg-muted/40 p-4 md:p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>

@@ -5,7 +5,7 @@ import {
   ShoppingBasket,
 } from "lucide-react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 const adminSidebarMenuItems = [
   {
@@ -32,9 +32,14 @@ function MenuItems({ setOpen }) {
   return (
     <nav className="mt-8 flex flex-col gap-2">
       {adminSidebarMenuItems.map((menuitems) => (
-        <div
+        <NavLink
           key={menuitems.id}
-          className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+          to={menuitems.path}
+          className={({ isActive }) =>
+            `flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground ${
+              isActive ? "bg-muted text-background" : ""
+            }`
+          }
           onClick={() => {
             navigate(menuitems.path);
             setOpen ? setOpen(false) : null;
@@ -42,7 +47,7 @@ function MenuItems({ setOpen }) {
         >
           {menuitems.icons}
           {menuitems.label}
-        </div>
+        </NavLink>
       ))}
     </nav>
   );
