@@ -23,6 +23,7 @@ const loginUser = async (req, res) => {
         id: checkUser._id,
         email: checkUser.email,
         role: checkUser.role,
+        userName: checkUser.userName,
       },
       "CLIENT_SECRET_KEY",
       { expiresIn: "60m" }
@@ -34,6 +35,7 @@ const loginUser = async (req, res) => {
         email: checkUser.email,
         role: checkUser.role,
         id: checkUser._id,
+        userName: checkUser.userName,
       },
     });
   } catch (error) {
@@ -47,7 +49,9 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
   const { userName, email, password } = req.body;
   try {
-    const user1 = await User.findOne({ email: email });
+    const user1 = await User.findOne({
+      $or: [{ email: email }, { userName: userName }],
+    });
     if (user1)
       return res.status(400).json({
         success: false,
@@ -75,13 +79,14 @@ const registerUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-  res
-    .clearCookie("token")
-    .json({ success: false, message: "Logged Out Successfully!" });
+  res.clearCookie("token", {
+    httpOnly: true,
+  });
+  return res.json({ success: true, message: "Logged Out Successfully!" });
 };
 const authMiddleware = async (req, res, next) => {
   const token = req?.cookies?.token;
-  console.log(token);
+  // console.log(token);
 
   if (!token)
     return res

@@ -30,6 +30,8 @@ export const editProduct = createAsyncThunk(
   "/products/edit",
   async ({ id, formData }, { rejectWithValue }) => {
     try {
+      console.log(formData, "Fo!!rm");
+
       const response = await axios.put(
         `http://localhost:5000/api/admin/products/edit/${id}`,
         formData,
@@ -39,8 +41,12 @@ export const editProduct = createAsyncThunk(
           },
         }
       );
+      console.log("Edata", response);
+
       return response.data;
     } catch (error) {
+      console.log(formData);
+
       console.log(error);
       return rejectWithValue(
         error.response?.data || { message: "Unknown edit error" }
@@ -50,10 +56,15 @@ export const editProduct = createAsyncThunk(
 );
 export const deleteProducts = createAsyncThunk(
   "/products/delete",
-  async ({ id }, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
+      console.log("deleteproductid", id);
+
       const response = await axios.delete(
-        `http://localhost:5000/api/admin/products/edit/${id}`
+        `http://localhost:5000/api/admin/products/delete/${id}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

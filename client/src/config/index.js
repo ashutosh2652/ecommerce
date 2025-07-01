@@ -99,3 +99,35 @@ export const addProductFormElements = [
     placeholder: "Enter total stock",
   },
 ];
+export const shoppingViewHeaderShoppingItems = [
+  {
+    id: "home",
+    label: "Home",
+    path: "/shop/home",
+  },
+  {
+    id: "men",
+    label: "Men",
+    path: "/shop/list",
+  },
+  {
+    id: "women",
+    label: "Women",
+    path: "/shop/list",
+  },
+  {
+    id: "kids",
+    label: "Kids",
+    path: "/shop/list",
+  },
+  {
+    id: "footwear",
+    label: "Footwear",
+    path: "/shop/list",
+  },
+  {
+    id: "accessories",
+    label: "Accessories",
+    path: "/shop/list",
+  },
+];

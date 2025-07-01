@@ -13,6 +13,7 @@ function ProductImageUpload({
   setuploadImageUrl,
   setImageLoading,
   ImageLoading,
+  isImageAllowed = true,
 }) {
   const InputRef = useRef(null);
   function handleImageFileChange(event) {
@@ -47,7 +48,9 @@ function ProductImageUpload({
       );
       setImageLoading(false);
       console.log(response);
-      if (response.data?.success) setuploadImageUrl(response.data?.result?.url);
+      if (response.data?.success) {
+        setuploadImageUrl(response.data?.result?.url);
+      }
     } catch (error) {
       setImageLoading(false);
       setuploadImageUrl("");
@@ -72,7 +75,7 @@ function ProductImageUpload({
         onDrop={handleDrop}
         className={` bg-muted-foreground mt-5 ${
           !ImageLoading ? "border-2 p-4 border-dashed" : ""
-        }`}
+        }  ${!isImageAllowed ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <Input
           type="file"
@@ -83,7 +86,9 @@ function ProductImageUpload({
         />
         {!imageFile ? (
           <Label
-            className="flex flex-col justify-center items-center h-32"
+            className={`flex flex-col justify-center items-center h-32 ${
+              !isImageAllowed ? "cursor-not-allowed" : ""
+            }`}
             htmlFor="file-upload"
           >
             <CloudUpload />

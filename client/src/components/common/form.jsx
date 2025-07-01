@@ -18,6 +18,7 @@ function CommonForm({
   setFormData,
   onSubmit,
   buttonText,
+  isEditable = true,
 }) {
   const types = {
     INPUT: "input",
@@ -104,6 +105,8 @@ function CommonForm({
     }
     return element;
   }
+  // console.log("isEditable", isEditable);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -115,7 +118,15 @@ function CommonForm({
             </div>
           ))}
         </div>
-        <Button type="submit" className="mt-2 w-full">
+        <Button
+          type="submit"
+          className={`mt-2 w-full cursor-pointer ${
+            !isEditable
+              ? "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
+              : ""
+          }`}
+          disabled={!isEditable}
+        >
           {buttonText || "Submit"}
         </Button>
       </form>

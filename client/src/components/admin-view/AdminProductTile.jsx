@@ -1,7 +1,20 @@
+import { useDispatch } from "react-redux";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import {
+  deleteProducts,
+  fetchAllProducts,
+} from "../../store/admin/products-slice";
+import { toast } from "sonner";
 
-function AdminProductTile({ product }) {
+function AdminProductTile({
+  product,
+  setFormData,
+  setopenCreateProductDialog,
+  setcurrenteditedId,
+  currenteditedId,
+}) {
+  const dispatch = useDispatch();
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div>
@@ -28,8 +41,36 @@ function AdminProductTile({ product }) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between items-center">
-          <Button>Edit</Button>
-          <Button>Delete</Button>
+          <Button
+            onClick={() => {
+              setopenCreateProductDialog(true);
+              setFormData(product);
+              setcurrenteditedId(product?._id);
+            }}
+            className="cursor-pointer"
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(deleteProducts(product?._id))
+                .then((data) => {
+                  if (data?.payload?.success) {
+                    dispatch(fetchAllProducts());
+                    toast.success("Product Deleted Successfully");
+                  } else {
+                    toast.error("Error while deleting Product");
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                  toast.error("Error while deleting Product");
+                });
+            }}
+            className="cursor-pointer"
+          >
+            Delete
+          </Button>
         </CardFooter>
       </div>
     </Card>

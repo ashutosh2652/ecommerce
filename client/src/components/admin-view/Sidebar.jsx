@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   ShoppingBasket,
 } from "lucide-react";
-import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 const adminSidebarMenuItems = [
@@ -36,7 +35,7 @@ function MenuItems({ setOpen }) {
           key={menuitems.id}
           to={menuitems.path}
           className={({ isActive }) =>
-            `flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground ${
+            `flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-pink-500 hover:text-foreground ${
               isActive ? "bg-muted text-background" : ""
             }`
           }
