@@ -131,3 +131,26 @@ export const shoppingViewHeaderShoppingItems = [
     path: "/shop/list",
   },
 ];
+export const filterOptions = {
+  Category: [
+    { id: "men", label: "Men", count: 2 },
+    { id: "women", label: "Women" },
+    { id: "kids", label: "Kids" },
+    { id: "accessories", label: "Accessories" },
+    { id: "footwear", label: "Footwear" },
+  ],
+  Brand: [
+    { id: "nike", label: "Nike" },
+    { id: "adidas", label: "Adidas" },
+    { id: "puma", label: "Puma" },
+    { id: "levi", label: "Levi" },
+    { id: "zara", label: "Zara" },
+    { id: "h&m", label: "H&M" },
+  ],
+};
+export const SortOptions = [
+  { id: "low-to-high", label: "Price: Low to High" },
+  { id: "high-to-low", label: "Price: High to Low" },
+  { id: "title-atoz", label: "Title: A to Z" },
+  { id: "title-ztoa", label: "Title: Z to A" },
+];

@@ -1,16 +1,8 @@
-import {
-  HousePlug,
-  LogOut,
-  Menu,
-  ShoppingCart,
-  UserCog,
-  X,
-} from "lucide-react";
+import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderShoppingItems } from "../../config";
 import {
   DropdownMenu,
@@ -24,6 +16,9 @@ import {
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
 import { AvatarFallback } from "../ui/avatar";
+import { logoutUser } from "../../store/auth-slice";
+import { toast } from "sonner";
+
 function MenuItems() {
   return (
     <nav className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-6 mb-4 lg:mb-0">
@@ -31,15 +26,15 @@ function MenuItems() {
         <Link
           key={item.id}
           to={item.path}
-          className="relative inline-block text-lg lg:text-sm font-medium text-muted-foreground
-             hover:text-gray-300 transition-colors cursor-pointer w-full px-4 lg:px-1 py-1
-             rounded-md lg:rounded-none lg:hover:bg-black lg:py-0
+          className="relative inline-block text-lg lg:text-sm font-medium text-gray-300
+             hover:text-white transition-colors cursor-pointer px-4 lg:px-1 py-1
+             rounded-md lg:rounded-none lg:hover:bg-gradient-to-r lg:hover:from-purple-900/30 lg:hover:to-pink-900/30 lg:py-0
 
              after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px]
-             after:w-full after:bg-gradient-to-r after:from-indigo-400 after:to-violet-500
+             after:w-full after:bg-gradient-to-r after:from-purple-400 after:to-pink-500
              after:transform after:scale-x-0 hover:after:scale-x-100
              after:transition-transform after:duration-500 after:ease-in-out
-             after:origin-left"
+             after:origin-left after:mx-3 after:lg:mx-0"
         >
           {item.label}
         </Link>
@@ -47,38 +42,82 @@ function MenuItems() {
     </nav>
   );
 }
+
 function RightHeaderContent() {
   const { user } = useSelector((state) => state.auth);
-  // console.log("UserName", user);
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logoutUser())
+      .then(() => {
+        toast.success("Logged Out Successfully!", {
+          style: {
+            background: "#1a1a1a",
+            color: "#fff",
+            border: "1px solid #4c1d95",
+          },
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error?.message, {
+          style: {
+            background: "#1a1a1a",
+            color: "#fff",
+            border: "1px solid #dc2626",
+          },
+        });
+      });
+  }
+
   return (
-    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-      <Button variant="ghost" size="icon" className="bg-black cursor-pointer">
-        <ShoppingCart className="h-6 w-6" />
+    <div className="flex flex-row lg:flex-row lg:items-center gap-4 h-full">
+      <Button
+        variant="ghost"
+        size="lg:icon"
+        className="relative group lg:bg-black bg-white text-black lg:text-white hover:bg-gray-300 lg:hover:bg-purple-900/30 cursor-pointer h-10 w-30 lg:h-8 lg:w-15 rounded-lg overflow-hidden"
+        onClick={() => navigate("/shop/checkout")}
+      >
+        <ShoppingCart className="h-6 w-6 transition-transform group-hover:scale-110" />
         <span className="sr-only">User Cart</span>
+        <span className="absolute -right-1 -top-1 bg-pink-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+          0
+        </span>
       </Button>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="w-full bg-black">
-            <AvatarFallback className="h-8 w-8 cursor-pointer rounded-full border-2 border-white bg-transparent text-white flex items-center justify-center text-sm font-extrabold">
+          <Avatar className="hover:bg-gray-300 hover:lg:bg-purple-900/30 cursor-pointer flex items-center justify-center w-full bg-white lg:bg-black text-black lg:text-white h-10 max-w-35 lg:h-8 lg:w-15 rounded-lg lg:rounded-lg py-1 lg:py-0 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+            <AvatarFallback className="h-8 w-8 cursor-pointer rounded-full border-2 lg:border-purple-400 border-pink-500 bg-transparent lg:text-white text-black flex items-center justify-center text-sm font-extrabold bg-gradient-to-br from-purple-500/10 to-pink-500/10">
               {user.userName[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side="right"
-          className="w-56 bg-gray-200 mr-5 text-black mt-3 flex flex-col rounded"
+          className="w-56 bg-gray-900 mr-5 text-white mt-3 flex flex-col rounded-lg mx-2 border border-gray-700 shadow-xl shadow-purple-900/20 overflow-hidden"
         >
-          <DropdownMenuLabel>Logged In as {user?.userName}</DropdownMenuLabel>
-          <DropdownMenuSeparator className="bg-black" />
-          <DropdownMenuItem className="cursor-pointer">
-            <UserCog className="h-6 w-6 mr-2 text-black" />
-            <span>Account</span>
+          <DropdownMenuLabel className="px-4 py-3 bg-gradient-to-r from-purple-900/50 to-pink-900/50">
+            <span className="text-sm font-normal text-gray-300">
+              Logged in as
+            </span>
+            <div className="text-white font-medium">{user?.userName}</div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-gradient-to-r from-purple-500 to-pink-500 h-[1px] border-0" />
+          <DropdownMenuItem
+            className="cursor-pointer text-white focus:bg-gray-800 hover:bg-gray-800/50 h-full px-4 py-3 transition-colors"
+            onClick={() => navigate("/shop/account")}
+          >
+            <UserCog className="h-5 w-5 mr-3 text-purple-400" />
+            <span>Account Settings</span>
           </DropdownMenuItem>
-          <DropdownMenuSeparator className="bg-black" />
-          <DropdownMenuItem className="cursor-pointer">
-            <LogOut className="text-black h-6 w-6 mr-2" />
+          <DropdownMenuSeparator className="bg-gradient-to-r from-purple-500 to-pink-500 h-[1px] border-0" />
+          <DropdownMenuItem
+            className="cursor-pointer text-white focus:bg-gray-800 hover:bg-gray-800/50 h-full px-4 py-3 transition-colors"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-5 w-5 mr-3 text-pink-400" />
             <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -86,40 +125,51 @@ function RightHeaderContent() {
     </div>
   );
 }
+
 function ShoppingHeader() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
   return (
-    <header className="sticky top-0 z-40 w-full border-b  bg-black/95 mx-auto">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6 ">
-        <Link to="/shop/home" className="flex items-center gap-2">
-          <HousePlug className="h-6 w-6" />
-          <span className="font-bold">Ecommerce</span>
+    <header className="sticky top-0 z-40 w-full border-b border-gray-800 bg-black/95 backdrop-blur-sm mx-auto">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
+        <Link to="/shop/home" className="flex items-center gap-2 group">
+          <HousePlug className="h-6 w-6 text-purple-400 group-hover:text-pink-400 transition-colors" />
+          <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+            Ecommerce
+          </span>
         </Link>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden bg-black cursor-pointer"
+              className="lg:hidden bg-black hover:bg-purple-900/30 text-white cursor-pointer rounded-lg"
             >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle Menu Bar</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="max-w-xs w-full px-6 py-15 ">
-            <MenuItems />
+          <SheetContent
+            side="left"
+            className="max-w-xs w-full px-6 py-15 bg-gray-900 border-r border-gray-800"
+          >
+            <div className="h-full flex flex-col justify-between">
+              <MenuItems />
+              <div className="mt-auto pb-8">
+                <RightHeaderContent />
+              </div>
+            </div>
           </SheetContent>
         </Sheet>
+
         <div className="hidden lg:block">
           <MenuItems />
         </div>
-        {isAuthenticated ? (
-          <div>
-            <RightHeaderContent />
-          </div>
-        ) : null}
+        <div className="hidden lg:block">
+          <RightHeaderContent />
+        </div>
       </div>
     </header>
   );
 }
+
 export default ShoppingHeader;
