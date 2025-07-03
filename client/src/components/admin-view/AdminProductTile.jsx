@@ -22,7 +22,7 @@ function AdminProductTile({
           <img
             src={product.image}
             alt={product.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
+            className="w-full h-[250px] object-cover rounded-t-lg"
           />
         </div>
         <CardContent>
@@ -67,7 +67,7 @@ function AdminProductTile({
                   toast.error("Error while deleting Product");
                 });
             }}
-            className="cursor-pointer"
+            className="cursor-pointer "
           >
             Delete
           </Button>

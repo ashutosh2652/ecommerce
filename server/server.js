@@ -44,5 +44,7 @@ import AuthRouter from "./routes/auth/auth-routes.js";
 app.use("/api/auth", AuthRouter);
 import AdminProductRoutes from "./routes/admin/product-routes.js";
 app.use("/api/admin/products", AdminProductRoutes);
+import ShopProductRoutes from "./routes/shop/products-routes.js";
+app.use("/api/shop/products", ShopProductRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is listening to port:${PORT}`));

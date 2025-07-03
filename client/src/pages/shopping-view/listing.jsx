@@ -12,10 +12,18 @@ import { Button } from "../../components/ui/button";
 import { ArrowUpDown, Check } from "lucide-react";
 import { SortOptions } from "../../config";
 import { Checkbox } from "../../components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ShoppingProductTile from "../../components/shopping-view/Product-Tile";
+import { fetchFilteredProducts } from "../../store/shop/products-slice";
 
 function ShoppingListing() {
   const [selected, setSelected] = useState(null);
+  const { productList } = useSelector((state) => state.ShoppingSlice);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchFilteredProducts());
+  }, [dispatch]);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6 p-4 sm:p-6">
       <ProductFilter />
@@ -41,7 +49,11 @@ function ShoppingListing() {
                 {SortOptions.map((options) => (
                   <DropdownMenuItem
                     key={options.id}
-                    onClick={() => setSelected(options.label)}
+                    onClick={() =>
+                      setSelected((prev) =>
+                        prev === options.label ? null : options.label
+                      )
+                    }
                   >
                     <div className="flex items-center gap-2 p-0.5  cursor-pointer hover:bg-gray-500 rounded-md px-2">
                       <span>{options.label}</span>
@@ -54,6 +66,13 @@ function ShoppingListing() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 ">
+          {productList &&
+            productList.length > 0 &&
+            productList.map((products) => (
+              <ShoppingProductTile product={products} key={products?._id} />
+            ))}
         </div>
       </div>
     </div>

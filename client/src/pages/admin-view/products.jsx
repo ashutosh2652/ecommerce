@@ -26,7 +26,7 @@ const initialFormData = {
   category: "",
   brand: "",
   price: "",
-  salesPrice: "0",
+  salesPrice: "",
   totalstock: "",
 };
 function AdminProducts() {
