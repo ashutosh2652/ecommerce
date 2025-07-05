@@ -12,8 +12,8 @@ function ShoppingProductTile({ product }) {
       whileHover={{ scale: 1.03 }}
       className="w-full max-w-sm mx-auto"
     >
-      <Card className="bg-gray-900 border-gray-800 overflow-hidden shadow-xl">
-        <div className="relative group">
+      <Card className="bg-gray-900 border-gray-800 overflow-hidden shadow-xl group">
+        <div className="relative">
           <motion.img
             src={product?.image}
             alt={product?.title}
@@ -23,15 +23,9 @@ function ShoppingProductTile({ product }) {
             transition={{ duration: 0.3 }}
           />
           {product.salesPrice > 0 && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 shadow-lg">
-                Sale
-              </Badge>
-            </motion.div>
+            <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 shadow-lg">
+              Sale
+            </Badge>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
             <motion.p

@@ -7,10 +7,15 @@ const initialState = {
 };
 export const fetchFilteredProducts = createAsyncThunk(
   "/shop/products/fetchfilteredproducts",
-  async (_, { rejectWithValue }) => {
+  async ({ selectedFilters, sortBy }, { rejectWithValue }) => {
     try {
+      const query = new URLSearchParams({
+        ...selectedFilters,
+        SortBy: sortBy,
+      });
+      console.log("query", query);
       const response = await axios.get(
-        "http://localhost:5000/api/admin/products/get"
+        `http://localhost:5000/api/shop/products/get?${query}`
       );
       return response?.data;
     } catch (error) {

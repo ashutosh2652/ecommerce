@@ -1,19 +1,11 @@
-import { object } from "prop-types";
 import { filterOptions } from "../../config";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
-import { useState } from "react";
-
-function ProductFilter() {
-  const [selectedFilters, setSelectedFilters] = useState(() => {
-    const initialState = {};
-    Object.keys(filterOptions).map((filterItems) => {
-      initialState[filterItems] = [];
-    });
-    return initialState;
-  });
-
+import { Button } from "../ui/button";
+import { motion, scale } from "framer-motion";
+import { useSelector } from "react-redux";
+function ProductFilter({ selectedFilters, setSelectedFilters }) {
   const handleCheckBoxChange = (category, value) => {
     setSelectedFilters((prev) => {
       let newFilter = { ...prev };
@@ -22,6 +14,7 @@ function ProductFilter() {
       } else {
         newFilter[category] = [...newFilter[category], value];
       }
+      sessionStorage.setItem("filter", JSON.stringify(newFilter));
       return newFilter;
     });
   };
@@ -32,6 +25,7 @@ function ProductFilter() {
     });
     setSelectedFilters(initialState);
   };
+  const { productList } = useSelector((state) => state.ShoppingSlice);
   return (
     <div className="rounded-lg bg-black shadow-2xl border border-gray-800">
       <div className="p-4 border-b border-gray-800 bg-gradient-to-r from-black to-gray-900 rounded-t-2xl">
@@ -51,18 +45,22 @@ function ProductFilter() {
                     className="flex items-center gap-2 font-medium text-gray-300 hover:text-white transition-colors"
                   >
                     <Checkbox
-                      checked={selectedFilters[keyitem].includes(option.label)}
+                      checked={selectedFilters[keyitem].includes(option.id)}
                       onCheckedChange={() =>
-                        handleCheckBoxChange(keyitem, option.label)
+                        handleCheckBoxChange(keyitem, option.id)
                       }
                       className="border-gray-600 hover:border-purple-400 dark:data-[state=checked]:border-purple-500 data-[state=checked]:border-purple-500 data-[state=checked]:bg-purple-500"
                     />
                     <span className="group-hover:text-white">
                       {option.label}
                     </span>
-                    {option.count && (
+                    {keyitem === "Category" && (
                       <span className="ml-auto text-xs text-gray-400">
-                        {option.count}
+                        {
+                          productList.filter(
+                            (item) => item.category === option.id
+                          ).length
+                        }
                       </span>
                     )}
                   </Label>
@@ -74,12 +72,14 @@ function ProductFilter() {
         ))}
       </div>
       <div className="p-4 border-t border-gray-800">
-        <button
-          className="w-full py-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
-          onClick={clearAllFilter}
-        >
-          Clear All Filters
-        </button>
+        <motion.div whileTap={{ scale: 0.92 }}>
+          <Button
+            className="w-full py-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+            onClick={clearAllFilter}
+          >
+            Clear All Filters
+          </Button>
+        </motion.div>
       </div>
     </div>
   );

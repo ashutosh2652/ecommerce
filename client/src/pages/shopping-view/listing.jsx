@@ -6,27 +6,55 @@ import ProductFilter from "../../components/shopping-view/ProductFilter";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
 } from "../../components/ui/dropdown-menu";
 import { Button } from "../../components/ui/button";
 import { ArrowUpDown, Check } from "lucide-react";
-import { SortOptions } from "../../config";
-import { Checkbox } from "../../components/ui/checkbox";
+import { filterOptions, SortOptions } from "../../config";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "../../components/shopping-view/Product-Tile";
 import { fetchFilteredProducts } from "../../store/shop/products-slice";
-
+import { useSearchParams } from "react-router-dom";
+function createsearchParamsHelper(filterParams) {
+  const QueryParams = [];
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+      QueryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+    }
+  }
+  return QueryParams.join("&");
+}
 function ShoppingListing() {
-  const [selected, setSelected] = useState(null);
+  const [sortBy, setsortBy] = useState("low-to-high");
   const { productList } = useSelector((state) => state.ShoppingSlice);
+  const [searchparams, setsearchparams] = useSearchParams();
   const dispatch = useDispatch();
+  const options = () => {
+    const initialState = {};
+    Object.keys(filterOptions).map((filterItems) => {
+      initialState[filterItems] = [];
+    });
+    return initialState;
+  };
+  const [selectedFilters, setSelectedFilters] = useState(
+    JSON.parse(sessionStorage.getItem("filter")) || options
+  );
   useEffect(() => {
-    dispatch(fetchFilteredProducts());
-  }, [dispatch]);
+    if (selectedFilters && Object.keys(selectedFilters).length > 0) {
+      const createQuerystring = createsearchParamsHelper(selectedFilters);
+      setsearchparams(new URLSearchParams(createQuerystring));
+    }
+  }, [selectedFilters]);
+  useEffect(() => {
+    dispatch(fetchFilteredProducts({ selectedFilters, sortBy }));
+  }, [dispatch, sortBy, selectedFilters]);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6 p-4 sm:p-6">
-      <ProductFilter />
+      <ProductFilter
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+      />
       <div className="rounded-lg shadow-sm w-full bg-gradient-to-b from-black/90 via-gray-500/30 to-transparent">
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="font-extrabold text-gray-400 text-lg">All Products</h2>
@@ -42,7 +70,7 @@ function ShoppingListing() {
                   <span className="font-semibold text-base">Sort</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
+              <DropdownMenuContent // for radio use dropdownmenuRadioGroup and dropdownmenuRadioItem
                 align="end"
                 className="w-56 flex flex-col mt-2"
               >
@@ -50,14 +78,14 @@ function ShoppingListing() {
                   <DropdownMenuItem
                     key={options.id}
                     onClick={() =>
-                      setSelected((prev) =>
-                        prev === options.label ? null : options.label
+                      setsortBy((prev) =>
+                        prev === options.id ? "low-to-high" : options.id
                       )
                     }
                   >
                     <div className="flex items-center gap-2 p-0.5  cursor-pointer hover:bg-gray-500 rounded-md px-2">
                       <span>{options.label}</span>
-                      {selected === options.label && (
+                      {sortBy === options.id && (
                         <Check className=" border-black/65" />
                       )}
                     </div>
