@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
+  productDetail: null,
 };
 export const fetchFilteredProducts = createAsyncThunk(
   "/shop/products/fetchfilteredproducts",
@@ -13,7 +14,7 @@ export const fetchFilteredProducts = createAsyncThunk(
         ...selectedFilters,
         SortBy: sortBy,
       });
-      console.log("query", query);
+      // console.log("query", query);
       const response = await axios.get(
         `http://localhost:5000/api/shop/products/get?${query}`
       );
@@ -22,6 +23,22 @@ export const fetchFilteredProducts = createAsyncThunk(
       console.log(error);
       return rejectWithValue(
         error.response?.data || { message: "Unknown fetch error" }
+      );
+    }
+  }
+);
+export const fetchProductDetail = createAsyncThunk(
+  "/shop/products/fetchProductDetail",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/shop/products/get/${id}`
+      );
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(
+        error.response?.message || { message: "Unknown fetch error" }
       );
     }
   }
@@ -44,6 +61,18 @@ const ShoppingProductSlice = createSlice({
       .addCase(fetchFilteredProducts.rejected, (state) => {
         state.isLoading = false;
         state.productList = [];
+      })
+      .addCase(fetchProductDetail.pending, (state) => {
+        state.isLoading = true;
+        state.productDetail = null;
+      })
+      .addCase(fetchProductDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.productDetail = action?.payload?.data;
+      })
+      .addCase(fetchProductDetail.rejected, (state) => {
+        state.isLoading = false;
+        state.productDetail = null;
       });
   },
 });

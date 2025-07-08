@@ -3,8 +3,8 @@ const fetchFilteredProducts = async (req, res) => {
   try {
     const { Category = [], Brand = [], SortBy = "low-to-high" } = req.query;
     // console.log("Hello");
-    console.log(Category.length);
-    console.log(req.query);
+    // console.log(Category.length);
+    // console.log(req.query);
 
     const filter = {};
     const sort = {};
@@ -31,11 +31,11 @@ const fetchFilteredProducts = async (req, res) => {
     if (Brand.length) {
       filter.brand = { $in: Brand.split(",") };
     }
-    console.log(filter);
-    console.log("sort", sort);
+    // console.log(filter);
+    // console.log("sort", sort);
 
     const fetchProduct = await Products.find(filter).sort(sort);
-    console.log(fetchProduct);
+    // console.log(fetchProduct);
 
     res.status(200).json({
       success: true,
@@ -49,4 +49,23 @@ const fetchFilteredProducts = async (req, res) => {
     });
   }
 };
-export { fetchFilteredProducts };
+const fetchProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // console.log(id);
+
+    const fetchedproduct = await Products.findById(id);
+    if (!fetchedproduct)
+      return res.status(404).json({
+        success: false,
+        message: "Wrong product id or product doesnot exist",
+      });
+    res.status(200).json({ success: true, data: fetchedproduct });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error while fetching product" });
+  }
+};
+export { fetchFilteredProducts, fetchProductById };

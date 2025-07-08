@@ -13,8 +13,12 @@ import { filterOptions, SortOptions } from "../../config";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ShoppingProductTile from "../../components/shopping-view/Product-Tile";
-import { fetchFilteredProducts } from "../../store/shop/products-slice";
+import {
+  fetchFilteredProducts,
+  fetchProductDetail,
+} from "../../store/shop/products-slice";
 import { useSearchParams } from "react-router-dom";
+import ProductDetailDialog from "../../components/shopping-view/Product-Details";
 function createsearchParamsHelper(filterParams) {
   const QueryParams = [];
   for (const [key, value] of Object.entries(filterParams)) {
@@ -29,6 +33,7 @@ function ShoppingListing() {
   const [sortBy, setsortBy] = useState("low-to-high");
   const { productList } = useSelector((state) => state.ShoppingSlice);
   const [searchparams, setsearchparams] = useSearchParams();
+  const [openDialogBox, setopenDialogBox] = useState(false);
   const dispatch = useDispatch();
   const options = () => {
     const initialState = {};
@@ -40,6 +45,7 @@ function ShoppingListing() {
   const [selectedFilters, setSelectedFilters] = useState(
     JSON.parse(sessionStorage.getItem("filter")) || options
   );
+
   useEffect(() => {
     if (selectedFilters && Object.keys(selectedFilters).length > 0) {
       const createQuerystring = createsearchParamsHelper(selectedFilters);
@@ -49,6 +55,15 @@ function ShoppingListing() {
   useEffect(() => {
     dispatch(fetchFilteredProducts({ selectedFilters, sortBy }));
   }, [dispatch, sortBy, selectedFilters]);
+
+  function handleProductDetails(getcurrentproductId) {
+    dispatch(fetchProductDetail(getcurrentproductId));
+  }
+  const { productDetail } = useSelector((state) => state.ShoppingSlice);
+  console.log("productDetail", productDetail);
+  useEffect(() => {
+    if (productDetail !== null) setopenDialogBox(true);
+  }, [productDetail]);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6 p-4 sm:p-6">
       <ProductFilter
@@ -59,7 +74,9 @@ function ShoppingListing() {
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="font-extrabold text-gray-400 text-lg">All Products</h2>
           <div className="flex items-center justify-center gap-5">
-            <span className="text-muted-foreground">10 Products</span>
+            <span className="text-muted-foreground animate-fadeIn">
+              {productList.length} Products
+            </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -99,10 +116,19 @@ function ShoppingListing() {
           {productList &&
             productList.length > 0 &&
             productList.map((products) => (
-              <ShoppingProductTile product={products} key={products?._id} />
+              <ShoppingProductTile
+                product={products}
+                key={products?._id}
+                handleProductDetails={handleProductDetails}
+              />
             ))}
         </div>
       </div>
+      <ProductDetailDialog
+        open={openDialogBox}
+        setopen={setopenDialogBox}
+        productDetail={productDetail}
+      />
     </div>
   );
 }

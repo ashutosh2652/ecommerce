@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { motion } from "framer-motion";
 
-function ShoppingProductTile({ product }) {
+function ShoppingProductTile({ product, handleProductDetails }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,26 +17,17 @@ function ShoppingProductTile({ product }) {
           <motion.img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[250px] object-cover"
+            className="w-full h-[250px] object-cover cursor-pointer"
             initial={{ opacity: 0.9 }}
             whileHover={{ opacity: 1, scale: 1.05 }}
             transition={{ duration: 0.3 }}
+            onClick={() => handleProductDetails(product?._id)}
           />
           {product.salesPrice > 0 && (
             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 shadow-lg">
               Sale
             </Badge>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="text-white text-sm"
-            >
-              {product?.description?.substring(0, 100)}...
-            </motion.p>
-          </div>
         </div>
 
         <CardContent className="p-5">

@@ -27,7 +27,7 @@ function ProductFilter({ selectedFilters, setSelectedFilters }) {
   };
   const { productList } = useSelector((state) => state.ShoppingSlice);
   return (
-    <div className="rounded-lg bg-black shadow-2xl border border-gray-800">
+    <div className="rounded-lg bg-black shadow-2xl border border-gray-800 sticky ">
       <div className="p-4 border-b border-gray-800 bg-gradient-to-r from-black to-gray-900 rounded-t-2xl">
         <h2 className="text-lg font-semibold text-white">Filters</h2>
       </div>
