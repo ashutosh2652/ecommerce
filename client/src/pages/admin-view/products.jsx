@@ -56,6 +56,7 @@ function AdminProducts() {
             .catch((error) => {
               console.log(error);
               toast.error(error.message);
+              setImageFile(null);
             })
         : dispatch(addNewProducts({ ...formData, image: uploadImageUrl }))
             .then((data) => {
@@ -69,10 +70,12 @@ function AdminProducts() {
               } else {
                 toast.error("Failed to add the Product");
               }
+              setuploadImageUrl("");
             })
             .catch((error) => {
               console.log(error);
               toast.error("Failed to add the Product");
+              setuploadImageUrl("");
             });
     }
   }

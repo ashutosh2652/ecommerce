@@ -18,6 +18,9 @@ import {
 import { AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "../../store/auth-slice";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import CartWrapper from "./cart-wrapper";
+import { fetchCartItems } from "../../store/shop/cart-slice";
 
 function MenuItems() {
   return (
@@ -47,7 +50,11 @@ function RightHeaderContent() {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [opencardsheet, setopencardsheet] = useState(false);
+  const { cartItems } = useSelector((state) => state.ShoppingCart);
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch]);
   function handleLogout() {
     dispatch(logoutUser())
       .then(() => {
@@ -73,18 +80,23 @@ function RightHeaderContent() {
 
   return (
     <div className="flex flex-row lg:flex-row lg:items-center gap-4 h-full">
-      <Button
-        variant="ghost"
-        size="lg:icon"
-        className="relative group lg:bg-black bg-white text-black lg:text-white hover:bg-gray-300 lg:hover:bg-purple-900/30 cursor-pointer h-10 w-30 lg:h-8 lg:w-15 rounded-lg overflow-hidden"
-        onClick={() => navigate("/shop/checkout")}
-      >
-        <ShoppingCart className="h-6 w-6 transition-transform group-hover:scale-110" />
-        <span className="sr-only">User Cart</span>
-        <span className="absolute -right-1 -top-1 bg-pink-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-          0
-        </span>
-      </Button>
+      <Sheet open={opencardsheet} onOpenChange={() => setopencardsheet(false)}>
+        <Button
+          variant="ghost"
+          size="lg:icon"
+          className="relative group lg:bg-black bg-white text-black lg:text-white hover:bg-gray-300 lg:hover:bg-purple-900/30 cursor-pointer h-10 w-30 lg:h-8 lg:w-15 rounded-lg overflow-hidden"
+          onClick={() => {
+            setopencardsheet(true);
+          }}
+        >
+          <ShoppingCart className="h-6 w-6 transition-transform group-hover:scale-110" />
+          <span className="sr-only">User Cart</span>
+          <span className="absolute -right-1 -top-1 bg-pink-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            {cartItems && cartItems.items && cartItems.items.length}
+          </span>
+        </Button>
+        <CartWrapper cartItems={cartItems} />
+      </Sheet>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

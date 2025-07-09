@@ -18,7 +18,8 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) {
-        return callback(new Error("Origin Header is required!"));
+        // return callback(new Error("Origin Header is required!"));
+        return callback(null, true);
       }
       if (whitelist.includes(origin)) {
         return callback(null, true);
@@ -46,5 +47,7 @@ import AdminProductRoutes from "./routes/admin/product-routes.js";
 app.use("/api/admin/products", AdminProductRoutes);
 import ShopProductRoutes from "./routes/shop/products-routes.js";
 app.use("/api/shop/products", ShopProductRoutes);
+import CartProductRoutes from "./routes/shop/cart-routes.js";
+app.use("/api/shop/cart", CartProductRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is listening to port:${PORT}`));

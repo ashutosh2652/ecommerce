@@ -19,6 +19,8 @@ import {
 } from "../../store/shop/products-slice";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailDialog from "../../components/shopping-view/Product-Details";
+import { addToCart, fetchCartItems } from "../../store/shop/cart-slice";
+import { toast } from "sonner";
 function createsearchParamsHelper(filterParams) {
   const QueryParams = [];
   for (const [key, value] of Object.entries(filterParams)) {
@@ -34,6 +36,7 @@ function ShoppingListing() {
   const { productList } = useSelector((state) => state.ShoppingSlice);
   const [searchparams, setsearchparams] = useSearchParams();
   const [openDialogBox, setopenDialogBox] = useState(false);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const options = () => {
     const initialState = {};
@@ -59,13 +62,23 @@ function ShoppingListing() {
   function handleProductDetails(getcurrentproductId) {
     dispatch(fetchProductDetail(getcurrentproductId));
   }
+  function handleAddToCart(productId) {
+    dispatch(addToCart({ userId: user?.id, productId, quantity: 1 })).then(
+      (data) => {
+        if (data.payload.success) {
+          dispatch(fetchCartItems(user.id));
+          toast.success("Product added to Cart");
+        }
+      }
+    );
+  }
   const { productDetail } = useSelector((state) => state.ShoppingSlice);
-  console.log("productDetail", productDetail);
   useEffect(() => {
     if (productDetail !== null) setopenDialogBox(true);
   }, [productDetail]);
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6 p-4 sm:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] md:items-start gap-6 p-4 sm:p-6">
       <ProductFilter
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
@@ -112,7 +125,7 @@ function ShoppingListing() {
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 ">
           {productList &&
             productList.length > 0 &&
             productList.map((products) => (
@@ -120,6 +133,7 @@ function ShoppingListing() {
                 product={products}
                 key={products?._id}
                 handleProductDetails={handleProductDetails}
+                handleAddToCart={handleAddToCart}
               />
             ))}
         </div>

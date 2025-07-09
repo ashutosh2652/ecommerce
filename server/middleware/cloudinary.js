@@ -22,4 +22,13 @@ async function UploadImage(file) {
   });
   return result;
 }
-export { upload, UploadImage };
+const deleteImage = async (publicId) => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+export { upload, UploadImage, deleteImage };

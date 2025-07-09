@@ -1,4 +1,4 @@
-import { UploadImage } from "../../middleware/cloudinary.js";
+import { deleteImage, UploadImage } from "../../middleware/cloudinary.js";
 import { Products } from "../../models/Products.models.js";
 
 const handleImageUpload = async (req, res) => {
@@ -106,9 +106,16 @@ const deleteProducts = async (req, res) => {
   try {
     console.log("Delete1", req.params, "Delete");
     const { id } = req.params;
-
-    const products = await Products.findByIdAndDelete(id);
-    if (!products)
+    const product = await Products.findById(id);
+    const image = product?.image;
+    const result = await deleteImage(image.split("/")[7].split(".")[0]);
+    if (!result)
+      return res.status(500).json({
+        success: false,
+        message: "Something wents wrong while deleting image from cloudinary",
+      });
+    await product.deleteOne();
+    if (!product)
       return res.status(400).json({
         success: false,
         message: "Invalid Product Id or Product doesn't exist",
