@@ -1,8 +1,40 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteCartItems,
+  updatecartItemQuantity,
+} from "../../store/shop/cart-slice";
+import { toast } from "sonner";
 
 function CartItemsContent({ cartItems }) {
-  function handlecartItemDelete(getcartItem) {}
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  function updatecartItem(getcurrentproductId, operationType) {
+    dispatch(
+      updatecartItemQuantity({
+        userId: user.id,
+        productId: getcurrentproductId,
+        quantity:
+          operationType === "minus"
+            ? cartItems.quantity - 1
+            : cartItems.quantity + 1,
+      })
+    ).then((data) => {
+      if (data.payload.success) {
+        toast.success("Cart Updated Successfully");
+      }
+    });
+  }
+  function handlecartItemDelete(getcartItem) {
+    dispatch(
+      deleteCartItems({ userId: user.id, productId: getcartItem.productId })
+    ).then((data) => {
+      if (data.payload.success) {
+        toast.success("Product deleted successfully");
+      }
+    });
+  }
   return (
     <div className="flex items-center space-x-4">
       <img
@@ -17,8 +49,10 @@ function CartItemsContent({ cartItems }) {
             variant="outline"
             size="icon"
             className="text-black rounded-s-full border-muted cursor-pointer"
+            disabled={cartItems?.quantity <= 1}
+            onClick={() => updatecartItem(cartItems.productId, "minus")}
           >
-            <Minus />
+            <Minus className="h-4 w-4" />
             <span className="sr-only">Decrease</span>
           </Button>
           <span className="font-semibold text-lg">{cartItems.quantity}</span>
@@ -26,8 +60,9 @@ function CartItemsContent({ cartItems }) {
             variant="outline"
             size="icon"
             className="text-black  rounded-e-full border-muted cursor-pointer"
+            onClick={() => updatecartItem(cartItems.productId, "plus")}
           >
-            <Plus />
+            <Plus className="h-4 w-4" />
             <span className="sr-only">Increase</span>
           </Button>
         </div>

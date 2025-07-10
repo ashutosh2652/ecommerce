@@ -52,6 +52,8 @@ function RightHeaderContent() {
   const dispatch = useDispatch();
   const [opencardsheet, setopencardsheet] = useState(false);
   const { cartItems } = useSelector((state) => state.ShoppingCart);
+  console.log("cartItems1", cartItems);
+
   useEffect(() => {
     dispatch(fetchCartItems(user?.id));
   }, [dispatch]);

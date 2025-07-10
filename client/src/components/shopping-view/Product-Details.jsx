@@ -4,10 +4,17 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { useDispatch } from "react-redux";
+import { setProductDetails } from "../../store/shop/products-slice";
 
 function ProductDetailDialog({ open, setopen, productDetail }) {
+  const dispatch = useDispatch();
+  function handleproductdetailsdialog() {
+    setopen(false);
+    dispatch(setProductDetails());
+  }
   return (
-    <Dialog open={open} onOpenChange={setopen}>
+    <Dialog open={open} onOpenChange={handleproductdetailsdialog}>
       <DialogContent className="bg-gray-800 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] grid grid-cols-2 gap-8 sm:p-12">
         <div className="relative rounded-lg overflow-hidden">
           <img

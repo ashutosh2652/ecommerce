@@ -4,7 +4,17 @@ import CartItemsContent from "./cart-items-content";
 
 function CartWrapper({ cartItems }) {
   console.log("cartItems", cartItems.items);
-
+  const cartitemstotalprice =
+    (cartItems &&
+      cartItems.items &&
+      cartItems.items.length > 0 &&
+      cartItems.items.reduce(
+        (sum, item) =>
+          sum +
+          (item.salesPrice > 0 ? item.salesPrice : item.price) * item.quantity,
+        0
+      )) ||
+    0;
   return (
     <SheetContent className="sm:max-w-md p-4">
       <SheetHeader>
@@ -14,12 +24,14 @@ function CartWrapper({ cartItems }) {
         {cartItems &&
           cartItems.items &&
           cartItems.items.length > 0 &&
-          cartItems.items.map((item) => <CartItemsContent cartItems={item} />)}
+          cartItems.items.map((item) => (
+            <CartItemsContent cartItems={item} key={item.productId} />
+          ))}
       </div>
       <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
           <span className="font-bold">Total</span>
-          <span className="font-bold">$1000</span>
+          <span className="font-bold">$ {cartitemstotalprice}</span>
         </div>
       </div>
       <Button className="w-full mt-6 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 cursor-pointer hover:from-blue-700 hover:to-purple-700">

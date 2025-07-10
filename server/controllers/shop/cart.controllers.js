@@ -58,7 +58,7 @@ const fetchCartItems = async (req, res) => {
     await cartItems.save();
   }
   const populatecartItems = validItems.map((item) => ({
-    id: item.productId?._id,
+    productId: item.productId?._id,
     image: item.productId?.image,
     title: item.productId?.title,
     price: item.productId?.price,
@@ -93,6 +93,7 @@ const updatecartItemQuantity = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Cart item not found" });
     cartItems.items[cartitemindex].quantity = quantity;
+    await cartItems.save();
     await cartItems.populate({
       path: "items.productId",
       select: "image title price salesPrice",

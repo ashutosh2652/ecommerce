@@ -84,7 +84,6 @@ const ShoppingCartSlice = createSlice({
     builder
       .addCase(addToCart.pending, (state) => {
         state.isLoading = true;
-        state.cartItems = [];
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -96,7 +95,6 @@ const ShoppingCartSlice = createSlice({
       })
       .addCase(fetchCartItems.pending, (state) => {
         state.isLoading = true;
-        state.cartItems = [];
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -108,7 +106,6 @@ const ShoppingCartSlice = createSlice({
       })
       .addCase(updatecartItemQuantity.pending, (state) => {
         state.isLoading = true;
-        state.cartItems = [];
       })
       .addCase(updatecartItemQuantity.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -120,7 +117,6 @@ const ShoppingCartSlice = createSlice({
       })
       .addCase(deleteCartItems.pending, (state) => {
         state.isLoading = true;
-        state.cartItems = [];
       })
       .addCase(deleteCartItems.fulfilled, (state, action) => {
         state.isLoading = false;
