@@ -8,15 +8,18 @@ function CartWrapper({ cartItems }) {
     (cartItems &&
       cartItems.items &&
       cartItems.items.length > 0 &&
-      cartItems.items.reduce(
-        (sum, item) =>
-          sum +
-          (item.salesPrice > 0 ? item.salesPrice : item.price) * item.quantity,
-        0
-      )) ||
-    0;
+      cartItems.items
+        .reduce(
+          (sum, item) =>
+            sum +
+            (item.salesPrice > 0 ? item.salesPrice : item.price) *
+              item.quantity,
+          0
+        )
+        .toFixed(2)) ||
+    0.0;
   return (
-    <SheetContent className="sm:max-w-md p-4">
+    <SheetContent className="sm:max-w-md p-4 overflow-auto">
       <SheetHeader>
         <SheetTitle className="text-white ">Your Cart</SheetTitle>
       </SheetHeader>
@@ -28,15 +31,21 @@ function CartWrapper({ cartItems }) {
             <CartItemsContent cartItems={item} key={item.productId} />
           ))}
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between ">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">$ {cartitemstotalprice}</span>
+      <div className="flex justify-end h-full flex-col  ">
+        <div className="mt-8 space-y-4">
+          <div className="flex justify-between ">
+            <span className="font-bold">Total</span>
+            <span className="font-bold">$ {cartitemstotalprice}</span>
+          </div>
         </div>
+
+        <Button
+          disabled={cartitemstotalprice <= 0}
+          className="w-full mt-6 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 cursor-pointer hover:from-blue-700 hover:to-purple-700"
+        >
+          Checkout
+        </Button>
       </div>
-      <Button className="w-full mt-6 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 cursor-pointer hover:from-blue-700 hover:to-purple-700">
-        Checkout
-      </Button>
     </SheetContent>
   );
 }

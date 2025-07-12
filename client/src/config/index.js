@@ -133,7 +133,7 @@ export const shoppingViewHeaderShoppingItems = [
 ];
 export const filterOptions = {
   Category: [
-    { id: "men", label: "Men", count: 2 },
+    { id: "men", label: "Men" },
     { id: "women", label: "Women" },
     { id: "kids", label: "Kids" },
     { id: "accessories", label: "Accessories" },

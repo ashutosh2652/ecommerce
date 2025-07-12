@@ -45,6 +45,7 @@ function ShoppingListing() {
     });
     return initialState;
   };
+  console.log("sessionStorage", sessionStorage.getItem("filter"));
   const [selectedFilters, setSelectedFilters] = useState(
     JSON.parse(sessionStorage.getItem("filter")) || options
   );
@@ -142,6 +143,7 @@ function ShoppingListing() {
         open={openDialogBox}
         setopen={setopenDialogBox}
         productDetail={productDetail}
+        handleAddToCart={handleAddToCart}
       />
     </div>
   );

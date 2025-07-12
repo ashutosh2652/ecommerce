@@ -7,7 +7,12 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useDispatch } from "react-redux";
 import { setProductDetails } from "../../store/shop/products-slice";
 
-function ProductDetailDialog({ open, setopen, productDetail }) {
+function ProductDetailDialog({
+  open,
+  setopen,
+  productDetail,
+  handleAddToCart,
+}) {
   const dispatch = useDispatch();
   function handleproductdetailsdialog() {
     setopen(false);
@@ -59,7 +64,10 @@ function ProductDetailDialog({ open, setopen, productDetail }) {
             <span className="text-muted-foreground">(4.5)</span>
           </div>
           <div className="mt-5 mb-5">
-            <Button className="w-full cursor-pointer bg-blue-500">
+            <Button
+              className="w-full cursor-pointer bg-blue-500"
+              onClick={() => handleAddToCart(productDetail?._id)}
+            >
               Add to Cart
             </Button>
           </div>

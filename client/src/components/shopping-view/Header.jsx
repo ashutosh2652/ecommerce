@@ -21,14 +21,30 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import CartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "../../store/shop/cart-slice";
+import { Label } from "../ui/label";
 
 function MenuItems() {
+  const navigate = useNavigate();
+  function handlenavigate(navigateitem) {
+    sessionStorage.removeItem("filter");
+    const filterItem = {
+      Category: [],
+      Brand: [],
+    };
+    if (navigateitem.id !== "home") {
+      filterItem["Category"] = [navigateitem.id];
+    }
+    sessionStorage.setItem("filter", JSON.stringify(filterItem));
+
+    navigate(navigateitem.path);
+    // window.location.reload();
+  }
   return (
     <nav className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-6 mb-4 lg:mb-0">
       {shoppingViewHeaderShoppingItems.map((item) => (
-        <Link
+        <Label
           key={item.id}
-          to={item.path}
+          onClick={() => handlenavigate(item)}
           className="relative inline-block text-lg lg:text-sm font-medium text-gray-300
              hover:text-white transition-colors cursor-pointer px-4 lg:px-1 py-1
              rounded-md lg:rounded-none lg:hover:bg-gradient-to-r lg:hover:from-purple-900/30 lg:hover:to-pink-900/30 lg:py-0
@@ -40,7 +56,7 @@ function MenuItems() {
              after:origin-left after:mx-3 after:lg:mx-0"
         >
           {item.label}
-        </Link>
+        </Label>
       ))}
     </nav>
   );
