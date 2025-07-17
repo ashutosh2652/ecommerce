@@ -113,7 +113,10 @@ function RightHeaderContent() {
             {cartItems && cartItems.items && cartItems.items.length}
           </span>
         </Button>
-        <CartWrapper cartItems={cartItems} />
+        <CartWrapper
+          cartItems={cartItems}
+          setopencardsheet={setopencardsheet}
+        />
       </Sheet>
 
       <DropdownMenu>
@@ -158,7 +161,7 @@ function RightHeaderContent() {
 
 function ShoppingHeader() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-800 bg-black/95 backdrop-blur-sm mx-auto">
+    <header className="fixed top-0 z-40 w-full border-b border-gray-800 bg-black/95 backdrop-blur-sm mx-auto">
       <div className="flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
         <Link to="/shop/home" className="flex items-center gap-2 group">
           <HousePlug className="h-6 w-6 text-purple-400 group-hover:text-pink-400 transition-colors" />

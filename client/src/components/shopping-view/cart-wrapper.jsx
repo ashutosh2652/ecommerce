@@ -1,9 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import CartItemsContent from "./cart-items-content";
 
-function CartWrapper({ cartItems }) {
-  console.log("cartItems", cartItems.items);
+function CartWrapper({ cartItems, setopencardsheet }) {
+  const navigate = useNavigate();
   const cartitemstotalprice =
     (cartItems &&
       cartItems.items &&
@@ -42,6 +43,10 @@ function CartWrapper({ cartItems }) {
         <Button
           disabled={cartitemstotalprice <= 0}
           className="w-full mt-6 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 cursor-pointer hover:from-blue-700 hover:to-purple-700"
+          onClick={() => {
+            setopencardsheet(false);
+            navigate("/shop/checkout");
+          }}
         >
           Checkout
         </Button>
