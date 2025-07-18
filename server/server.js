@@ -51,5 +51,7 @@ import CartProductRoutes from "./routes/shop/cart-routes.js";
 app.use("/api/shop/cart", CartProductRoutes);
 import CustomerAddressRoutes from "./routes/shop/address-routes.js";
 app.use("/api/shop/address", CustomerAddressRoutes);
+import CustomerOrderRoutes from "./routes/shop/order-routes.js";
+app.use("/api/shop/order", CustomerOrderRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is listening to port:${PORT}`));

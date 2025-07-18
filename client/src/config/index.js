@@ -197,3 +197,16 @@ export const addressFormControls = [
     placeholder: "Enter any additional notes",
   },
 ];
+export const AdminOrderDetailformControl = [
+  {
+    label: "Change Status",
+    name: "status",
+    componentType: "select",
+    options: [
+      { id: "pending", label: "Pending" },
+      { id: "inprocess", label: "In Process" },
+      { id: "delievered", label: "Delivered" },
+      { id: "rejected", label: "Rejected" },
+    ],
+  },
+];

@@ -1,5 +1,5 @@
 import express from "express";
-import { upload } from "../../middleware/cloudinary.js";
+import { upload } from "../../helper/cloudinary.js";
 import {
   handleImageUpload,
   addProuct,

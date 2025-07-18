@@ -1,4 +1,4 @@
-import { deleteImage, UploadImage } from "../../middleware/cloudinary.js";
+import { deleteImage, UploadImage } from "../../helper/cloudinary.js";
 import { Products } from "../../models/Products.models.js";
 
 const handleImageUpload = async (req, res) => {

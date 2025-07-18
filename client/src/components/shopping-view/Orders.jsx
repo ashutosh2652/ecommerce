@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Dialog } from "../ui/dialog";
 import {
   Table,
   TableBody,
@@ -8,7 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import ShoppingOrderDetails from "./Order-Details";
 function ShoppingOrders() {
+  const [opendialogbox, setopendialogbox] = useState(false);
   return (
     <Card className="bg-white/75">
       <CardHeader>
@@ -34,7 +38,15 @@ function ShoppingOrders() {
               <TableCell>In Progress</TableCell>
               <TableCell>$ 1000</TableCell>
               <TableCell>
-                <Button className="cursor-pointer">View Details</Button>
+                <Dialog open={opendialogbox} onOpenChange={setopendialogbox}>
+                  <Button
+                    className="cursor-pointer"
+                    onClick={() => setopendialogbox(true)}
+                  >
+                    View Details
+                  </Button>
+                  <ShoppingOrderDetails />
+                </Dialog>
               </TableCell>
             </TableRow>
           </TableBody>

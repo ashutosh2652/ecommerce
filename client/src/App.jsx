@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice/index.js";
+import ShoppingOrderReturn from "./pages/shopping-view/OrderReturn.jsx";
 const AdminOrder = lazy(() => import("./pages/admin-view/orders.jsx"));
 const AdminProducts = lazy(() => import("./pages/admin-view/products.jsx"));
 const ShopLayout = lazy(() => import("./components/shopping-view/Layout.jsx"));
@@ -156,6 +157,14 @@ function App() {
             element={
               <Suspense fallback={<Loading />}>
                 <UserAccount />
+              </Suspense>
+            }
+          />
+          <Route
+            path="paypal-return"
+            element={
+              <Suspense fallback={<Loading />}>
+                <ShoppingOrderReturn />
               </Suspense>
             }
           />

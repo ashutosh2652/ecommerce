@@ -1,6 +1,6 @@
-import { Table } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -8,17 +8,21 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
+import { Dialog } from "../ui/dialog";
+import { useState } from "react";
+import AdminOrderDetails from "./Order-Details";
 
 function AdminOrderView() {
+  const [openDetailsDialog, setopenDetailsDialog] = useState(false);
   return (
-    <Card>
+    <Card className="bg-white/60">
       <CardHeader>
         <CardTitle>All Orders</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="hover:bg-transparent">
               <TableHead>Order Id</TableHead>
               <TableHead>Order Date</TableHead>
               <TableHead>Order Status</TableHead>
@@ -35,7 +39,18 @@ function AdminOrderView() {
               <TableCell>In Progress</TableCell>
               <TableCell>$1000</TableCell>
               <TableCell>
-                <Button>View Details</Button>
+                <Dialog
+                  open={openDetailsDialog}
+                  onOpenChange={setopenDetailsDialog}
+                >
+                  <Button
+                    className="cursor-pointer"
+                    onClick={() => setopenDetailsDialog(true)}
+                  >
+                    View Details
+                  </Button>
+                  <AdminOrderDetails />
+                </Dialog>
               </TableCell>
             </TableRow>
           </TableBody>
