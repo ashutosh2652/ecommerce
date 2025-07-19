@@ -12,6 +12,7 @@ import {
 } from "../../components/ui/card";
 import { useState } from "react";
 import { createNewOrder } from "../../store/shop/order-slice";
+import { toast } from "sonner";
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.ShoppingCart);
   const { user } = useSelector((state) => state.auth);
@@ -34,6 +35,14 @@ function ShoppingCheckout() {
         .toFixed(2)) ||
     0.0;
   function handlePaymentWithPaypal() {
+    if (currentSelectedAddress === null) {
+      toast.error("Please Select Address Before Payment");
+      return;
+    }
+    if (cartItems?.items.length <= 0) {
+      toast.error("Please Add Some Items");
+      return;
+    }
     const cartitems =
       cartItems && cartItems.items && cartItems.items.length > 0
         ? cartItems.items.map((cartItem) => ({
@@ -56,6 +65,7 @@ function ShoppingCheckout() {
     };
     const orderData = {
       userId: user?.id,
+      cartId: cartItems?._id,
       cartItems: cartitems,
       addressInfo,
       orderStatus: "pending",
@@ -94,7 +104,10 @@ function ShoppingCheckout() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
         <div className="w-full">
-          <Address setcurrentSelectedAddress={setcurrentSelectedAddress} />
+          <Address
+            setcurrentSelectedAddress={setcurrentSelectedAddress}
+            currentSelectedAddress={currentSelectedAddress}
+          />
         </div>
         <Card className="bg-black text-white">
           <CardHeader>
@@ -121,7 +134,6 @@ function ShoppingCheckout() {
           </CardContent>
           <CardFooter>
             <Button
-              disabled={cartitemstotalprice <= 0}
               className="w-full mt-6 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 cursor-pointer hover:from-blue-700 hover:to-purple-700"
               onClick={handlePaymentWithPaypal}
             >

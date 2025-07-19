@@ -9,11 +9,20 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { Dialog } from "../ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminOrderDetails from "./Order-Details";
+import { useDispatch, useSelector } from "react-redux";
+import { Badge } from "../ui/badge";
+import { getAllOrderOfAllUser } from "../../store/admin/order-slice";
 
 function AdminOrderView() {
   const [openDetailsDialog, setopenDetailsDialog] = useState(false);
+  const [opendialogbox, setopendialogbox] = useState(false);
+  const { OrderDetail, OrderList } = useSelector((state) => state.AdminOrder);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllOrderOfAllUser());
+  }, [dispatch]);
   return (
     <Card className="bg-white/60">
       <CardHeader>
@@ -33,26 +42,45 @@ function AdminOrderView() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell>12345</TableCell>
-              <TableCell>2024/08/15</TableCell>
-              <TableCell>In Progress</TableCell>
-              <TableCell>$1000</TableCell>
-              <TableCell>
-                <Dialog
-                  open={openDetailsDialog}
-                  onOpenChange={setopenDetailsDialog}
-                >
-                  <Button
-                    className="cursor-pointer"
-                    onClick={() => setopenDetailsDialog(true)}
-                  >
-                    View Details
-                  </Button>
-                  <AdminOrderDetails />
-                </Dialog>
-              </TableCell>
-            </TableRow>
+            {OrderList && OrderList.length > 0
+              ? OrderList.map((orderItem) => (
+                  <TableRow key={orderItem._id}>
+                    <TableCell>{orderItem._id}...</TableCell>
+                    <TableCell>{orderItem.orderDate.split("T")[0]}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`py-1 px-2 ${
+                          orderItem.orderStatus === "Confirmed"
+                            ? "bg-green-500"
+                            : "bg-black"
+                        }`}
+                      >
+                        {orderItem.orderStatus}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>$ {orderItem.totalAmount}</TableCell>
+                    <TableCell>
+                      <Dialog
+                        open={opendialogbox}
+                        // onOpenChange={() => {
+                        //   setopendialogbox(false);
+                        //   dispatch(resetOrderDetail());
+                        // }}
+                      >
+                        <Button
+                          className="cursor-pointer"
+                          // onClick={() =>
+                          //   handleOrderDetailDialog(orderItem?._id)
+                          // }
+                        >
+                          View Details
+                        </Button>
+                        <AdminOrderDetails />
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : null}
           </TableBody>
         </Table>
       </CardContent>

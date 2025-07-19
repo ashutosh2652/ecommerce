@@ -19,7 +19,7 @@ const initialFormData = {
   phone: "",
   notes: "",
 };
-function Address({ setcurrentSelectedAddress }) {
+function Address({ setcurrentSelectedAddress, currentSelectedAddress }) {
   const [formdata, setformdata] = useState(initialFormData);
   const [currentEditedId, setcurrentEditedId] = useState(null);
   const { user } = useSelector((state) => state.auth);
@@ -102,6 +102,7 @@ function Address({ setcurrentSelectedAddress }) {
               handleDeleteAddress={handleDeleteAddress}
               handleEditAddress={handleEditAddress}
               setcurrentSelectedAddress={setcurrentSelectedAddress}
+              currentSelectedAddress={currentSelectedAddress}
             />
           ))
         ) : (

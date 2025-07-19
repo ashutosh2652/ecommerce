@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice/index.js";
 import ShoppingOrderReturn from "./pages/shopping-view/OrderReturn.jsx";
+import PaymentSuccess from "./pages/shopping-view/PaymentSuccess.jsx";
 const AdminOrder = lazy(() => import("./pages/admin-view/orders.jsx"));
 const AdminProducts = lazy(() => import("./pages/admin-view/products.jsx"));
 const ShopLayout = lazy(() => import("./components/shopping-view/Layout.jsx"));
@@ -165,6 +166,14 @@ function App() {
             element={
               <Suspense fallback={<Loading />}>
                 <ShoppingOrderReturn />
+              </Suspense>
+            }
+          />
+          <Route
+            path="payment-success"
+            element={
+              <Suspense fallback={<Loading />}>
+                <PaymentSuccess />
               </Suspense>
             }
           />

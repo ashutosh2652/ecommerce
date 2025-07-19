@@ -1,5 +1,5 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,13 +66,18 @@ function RightHeaderContent() {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const [opencardsheet, setopencardsheet] = useState(false);
   const { cartItems } = useSelector((state) => state.ShoppingCart);
-  console.log("cartItems1", cartItems);
 
   useEffect(() => {
     dispatch(fetchCartItems(user?.id));
   }, [dispatch]);
+  useEffect(() => {
+    if (location.pathname === "/shop/payment-success") {
+      dispatch(fetchCartItems(user?.id));
+    }
+  }, [location.pathname]);
   function handleLogout() {
     dispatch(logoutUser())
       .then(() => {
